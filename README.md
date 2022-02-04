@@ -5,7 +5,7 @@ The package is fully tested and works on API version v1
 
 ## Install
 
-```go
+```text
 go get github.com/plin2k/go-cent-app
 ```
 
