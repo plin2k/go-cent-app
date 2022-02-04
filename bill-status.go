@@ -9,6 +9,7 @@ const (
 	billStatusURL = apiURL + "/api/v1/bill/status"
 )
 
+// https://cent.app/en/merchant/api#bill-status
 type BillStatusRequest struct {
 	ID string // Unique bill ID
 }
@@ -18,10 +19,12 @@ type billStatusResponse struct {
 	Success bool `json:"success"` // Payment status
 }
 
-func (app *app) BillStatus(req *BillStatusRequest) (billStatusResponse, error) {
+// Get bill info and status.
+// https://cent.app/en/merchant/api#bill-status
+func (api *api) BillStatus(req *BillStatusRequest) (billStatusResponse, error) {
 	var response billStatusResponse
 
-	jsonString, err := app.request("GET", billStatusURL, req.constructURL())
+	jsonString, err := api.request("GET", billStatusURL, req.constructURL())
 	if err != nil {
 		return response, err
 	}

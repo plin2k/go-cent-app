@@ -9,6 +9,7 @@ const (
 	billToggleActivityURL = apiURL + "/api/v1/bill/toggle_activity"
 )
 
+// https://cent.app/en/merchant/api#bill-toggle
 type BillToggleActivityRequest struct {
 	ID     string // Unique bill id
 	Active bool   // false - deactivate bill true - activate bill
@@ -20,10 +21,12 @@ type billToggleActivityResponse struct {
 	Success bool `json:"success"` // This flag indicates status of request
 }
 
-func (app *app) BillToggleActivity(req *BillToggleActivityRequest) (billToggleActivityResponse, error) {
+// You can deactivate and activate bills using this APO.
+// https://cent.app/en/merchant/api#bill-toggle
+func (api *api) BillToggleActivity(req *BillToggleActivityRequest) (billToggleActivityResponse, error) {
 	var response billToggleActivityResponse
 
-	jsonString, err := app.request("POST", billToggleActivityURL, req.constructURL())
+	jsonString, err := api.request("POST", billToggleActivityURL, req.constructURL())
 	if err != nil {
 		return response, err
 	}

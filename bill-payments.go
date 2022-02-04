@@ -9,6 +9,7 @@ const (
 	billPaymentsURL = apiURL + "/api/v1/bill/payments"
 )
 
+// https://cent.app/en/merchant/api#bill-payments
 type BillPaymentsRequest struct {
 	ID string // Unique bill ID
 }
@@ -18,10 +19,12 @@ type billPaymentsResponse struct {
 	Success bool      `json:"success"` // Result
 }
 
-func (app *app) BillPayments(req *BillPaymentsRequest) (billPaymentsResponse, error) {
+// Get information about payments for one bill.
+// https://cent.app/en/merchant/api#bill-payments
+func (api *api) BillPayments(req *BillPaymentsRequest) (billPaymentsResponse, error) {
 	var response billPaymentsResponse
 
-	jsonString, err := app.request("GET", billPaymentsURL, req.constructURL())
+	jsonString, err := api.request("GET", billPaymentsURL, req.constructURL())
 	if err != nil {
 		return response, err
 	}

@@ -10,6 +10,7 @@ const (
 	billSearchURL = apiURL + "/api/v1/bill/search"
 )
 
+// https://cent.app/en/merchant/api#bill-search
 type BillSearchRequest struct {
 	StartDate  time.Time // Start date
 	FinishDate time.Time // End date
@@ -21,10 +22,12 @@ type billSearchResponse struct {
 	Success bool   `json:"success"` // Result
 }
 
-func (app *app) BillSearch(req *BillSearchRequest) (billSearchResponse, error) {
+// Search by bills.
+// https://cent.app/en/merchant/api#bill-search
+func (api *api) BillSearch(req *BillSearchRequest) (billSearchResponse, error) {
 	var response billSearchResponse
 
-	jsonString, err := app.request("GET", billSearchURL, req.constructURL())
+	jsonString, err := api.request("GET", billSearchURL, req.constructURL())
 	if err != nil {
 		return response, err
 	}

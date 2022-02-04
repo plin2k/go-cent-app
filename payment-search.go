@@ -10,6 +10,7 @@ const (
 	paymentSearchURL = apiURL + "/api/v1/payment/search"
 )
 
+// https://cent.app/en/merchant/api#payment-search
 type PaymentSearchRequest struct {
 	StartDate  time.Time // Start date
 	FinishDate time.Time // End date
@@ -21,10 +22,12 @@ type paymentSearchResponse struct {
 	Success bool      `json:"success"` // Result of request
 }
 
-func (app *app) PaymentSearch(req *PaymentSearchRequest) (paymentSearchResponse, error) {
+// Search payment.
+// https://cent.app/en/merchant/api#payment-search
+func (api *api) PaymentSearch(req *PaymentSearchRequest) (paymentSearchResponse, error) {
 	var response paymentSearchResponse
 
-	jsonString, err := app.request("GET", paymentSearchURL, req.constructURL())
+	jsonString, err := api.request("GET", paymentSearchURL, req.constructURL())
 	if err != nil {
 		return response, err
 	}

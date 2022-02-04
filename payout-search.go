@@ -10,6 +10,7 @@ const (
 	payoutSearchURL = apiURL + "/api/v1/payout/search"
 )
 
+// https://cent.app/en/merchant/api#payout-search
 type PayoutSearchRequest struct {
 	StartDate  time.Time // Start date for search
 	FinishDate time.Time // End date for search
@@ -20,10 +21,12 @@ type payoutSearchResponse struct {
 	Success bool     `json:"success"` // Result of request
 }
 
-func (app *app) PayoutSearch(req *PayoutSearchRequest) (payoutSearchResponse, error) {
+// You can request all your payouts using this method.
+// https://cent.app/en/merchant/api#payout-search
+func (api *api) PayoutSearch(req *PayoutSearchRequest) (payoutSearchResponse, error) {
 	var response payoutSearchResponse
 
-	jsonString, err := app.request("GET", payoutSearchURL, req.constructURL())
+	jsonString, err := api.request("GET", payoutSearchURL, req.constructURL())
 	if err != nil {
 		return response, err
 	}

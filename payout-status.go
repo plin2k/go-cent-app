@@ -9,6 +9,7 @@ const (
 	payoutStatusURL = apiURL + "/api/v1/payout/status"
 )
 
+// https://cent.app/en/merchant/api#payout-status
 type PayoutStatusRequest struct {
 	ID string // Unique payout ID
 }
@@ -17,10 +18,12 @@ type payoutStatusResponse struct {
 	payout
 }
 
-func (app *app) PayoutStatus(req *PayoutStatusRequest) (payoutStatusResponse, error) {
+// You can request a status of any payout operation.
+// https://cent.app/en/merchant/api#payout-status
+func (api *api) PayoutStatus(req *PayoutStatusRequest) (payoutStatusResponse, error) {
 	var response payoutStatusResponse
 
-	jsonString, err := app.request("GET", payoutStatusURL, req.constructURL())
+	jsonString, err := api.request("GET", payoutStatusURL, req.constructURL())
 	if err != nil {
 		return response, err
 	}

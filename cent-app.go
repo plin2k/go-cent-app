@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-type app struct {
+type api struct {
 	token       string
 	bearerToken string
 }
@@ -24,14 +24,6 @@ const (
 
 	TypeNormal = "NORMAL"
 	TypeMulti  = "MULTI"
-
-	StatusNEW        = "NEW"
-	StatusMODERATING = "MODERATING"
-	StatusPROCESS    = "PROCESS"
-	StatusSUCCESS    = "SUCCESS"
-	StatusFAIL       = "FAIL"
-	StatusERROR      = "ERROR"
-	StatusDECLINED   = "DECLINED"
 )
 
 var errors = make(map[int]map[string]string)
@@ -41,42 +33,46 @@ type message struct {
 }
 
 type payment struct {
-	ID             string    `json:"id"`              // Unique payment ID
-	Status         string    `json:"status"`          // Status of payment
-	Amount         float64   `json:"amount"`          // Total payment amount
-	AmountReceived float64   `json:"amount_received"` // Received amount
-	FromCard       string    `json:"from_card"`       // Payer's card
-	CurrencyIn     string    `json:"currency_in"`     // Payment currency
-	CreatedAt      time.Time `json:"created_at"`      // Creation date and time
+	ID             string  `json:"id"`              // Unique payment ID
+	Status         string  `json:"status"`          // Status of payment
+	Amount         float64 `json:"amount"`          // Total payment amount
+	AmountReceived float64 `json:"amount_received"` // Received amount
+	FromCard       string  `json:"from_card"`       // Payer's card
+	CurrencyIn     string  `json:"currency_in"`     // Payment currency
+	CreatedAt      Time    `json:"created_at"`      // Creation date and time
 }
 
 type bill struct {
-	ID         string    `json:"id"`          // Unique bill id
-	Status     string    `json:"status"`      // Bill status
-	Amount     float64   `json:"amount"`      // Bill amount
-	Type       string    `json:"type"`        // Type of bill. NORMAL is for onetime payments and MULTI is for infinity number of payments
-	CurrencyIn string    `json:"currency_in"` // Currency
-	CreatedAt  time.Time `json:"created_at"`  // Bill creation date and time
+	ID         string  `json:"id"`          // Unique bill id
+	Status     string  `json:"status"`      // Bill status
+	Amount     float64 `json:"amount"`      // Bill amount
+	Type       string  `json:"type"`        // Type of bill. NORMAL is for onetime payments and MULTI is for infinity number of payments
+	CurrencyIn string  `json:"currency_in"` // Currency
+	CreatedAt  Time    `json:"created_at"`  // Bill creation date and time
 }
 
 type balance struct {
-	Currency         string  `json:"currency"`          // Currency of balance
-	BalanceAvailable float64 `json:"balance_available"` // Available balance
-	BalanceLocked    float64 `json:"balance_locked"`    // Locked balance for payout
-	BalanceHold      float64 `json:"balance_hold"`      // Fees
+	Currency         string  `json:"currency"`                 // Currency of balance
+	BalanceAvailable float64 `json:"balance_available,string"` // Available balance
+	BalanceLocked    float64 `json:"balance_locked,string"`    // Locked balance for payout
+	BalanceHold      float64 `json:"balance_hold,string"`      // Fees
 }
 
 type payout struct {
-	ID                string    `json:"id"`                 // Unique ID of payment account
-	Status            string    `json:"status"`             // Payout status
-	Amount            float64   `json:"amount"`             // Payout amount
-	Commission        float64   `json:"commission"`         // Fees
-	AccountIdentifier string    `json:"account_identifier"` // Unique ID of payout account. Money will be send to this account
-	Currency          string    `json:"currency"`           // Payout currency
-	CreatedAt         time.Time `json:"created_at"`         // Date and time
+	ID                string  `json:"id"`                 // Unique ID of payment account
+	Status            string  `json:"status"`             // Payout status
+	Amount            float64 `json:"amount"`             // Payout amount
+	Commission        float64 `json:"commission"`         // Fees
+	AccountIdentifier string  `json:"account_identifier"` // Unique ID of payout account. Money will be send to this account
+	Currency          string  `json:"currency"`           // Payout currency
+	CreatedAt         Time    `json:"created_at"`         // Date and time
 }
 
-func New(token string) *app {
+type Time struct {
+	time.Time
+}
+
+func New(token string) *api {
 
 	errors[400] = map[string]string{
 		"api:error.too_many_payments":             "You are trying to get too many payments in one request",
@@ -118,29 +114,44 @@ func New(token string) *app {
 		"api:error.general_error": "Internal error",
 	}
 
-	return &app{
+	return &api{
 		token:       token,
-		bearerToken: "Bearer 72|" + token,
+		bearerToken: "Bearer " + token,
 	}
 }
 
-func (app *app) request(method, url string, params url.Values) (string, error) {
+func (api *api) request(method, url string, params url.Values) (string, error) {
+
+	tr := &http.Transport{
+		MaxIdleConns:       10,
+		IdleConnTimeout:    30 * time.Second,
+		DisableCompression: true,
+	}
 
 	client := &http.Client{
-		Timeout: time.Second * 60,
+		Transport: tr,
+		Timeout:   time.Second * 60,
 	}
+
+	if method == "GET" {
+		url += "?" + params.Encode()
+	}
+
 	req, err := http.NewRequest(method, url, strings.NewReader(params.Encode()))
 	if err != nil {
 		return "", fmt.Errorf("Got error %s", err.Error())
 	}
 
-	req.Header.Set("Authorization", app.bearerToken)
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	req.Header.Set("Authorization", api.bearerToken)
 
 	response, err := client.Do(req)
-	defer response.Body.Close()
 	if err != nil {
 		return "", fmt.Errorf("Got error %s", err.Error())
 	}
+
+	defer response.Body.Close()
 
 	body, err := ioutil.ReadAll(response.Body)
 	if err != nil {
@@ -169,6 +180,17 @@ func errorHandle(jsonString string, code int) error {
 
 		return fmt.Errorf("%s", msg.Message)
 	}
+
+	return nil
+}
+
+func (t *Time) UnmarshalJSON(b []byte) error {
+	ret, err := time.Parse("2006-01-02 15:04:05", strings.Trim(string(b), "\""))
+	if err != nil {
+		return err
+	}
+
+	*t = Time{ret}
 
 	return nil
 }

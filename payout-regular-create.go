@@ -2,14 +2,15 @@ package go_cent_app
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/url"
-	"strconv"
 )
 
 const (
 	payoutRegularCreateURL = apiURL + "/api/v1/payout/regular/create"
 )
 
+// https://cent.app/en/merchant/api#regular-payout-create
 type PayoutRegularCreateRequest struct {
 	Amount            float64 // Payout amount
 	Currency          string  // Currency
@@ -23,10 +24,14 @@ type payoutRegularCreateResponse struct {
 	Success bool     `json:"success"` // Result of request
 }
 
-func (app *app) PayoutRegularCreate(req *PayoutRegularCreateRequest) (payoutRegularCreateResponse, error) {
+// Attention: You need to request access to this API method from Support Team.
+//Payout to cards using your account balance.
+//You request can be split if amount is too large. In this case you will see a list of payouts.
+// https://cent.app/en/merchant/api#regular-payout-create
+func (api *api) PayoutRegularCreate(req *PayoutRegularCreateRequest) (payoutRegularCreateResponse, error) {
 	var response payoutRegularCreateResponse
 
-	jsonString, err := app.request("POST", payoutRegularCreateURL, req.constructURL())
+	jsonString, err := api.request("POST", payoutRegularCreateURL, req.constructURL())
 	if err != nil {
 		return response, err
 	}
@@ -42,7 +47,7 @@ func (app *app) PayoutRegularCreate(req *PayoutRegularCreateRequest) (payoutRegu
 func (req *PayoutRegularCreateRequest) constructURL() url.Values {
 	params := url.Values{}
 
-	params.Add("amount", strconv.FormatFloat(req.Amount, 'E', -1, 64))
+	params.Add("amount", fmt.Sprintf("%g", req.Amount))
 	params.Add("currency", req.Currency)
 	params.Add("account_type", req.AccountType)
 	params.Add("account_identifier", req.AccountIdentifier)
