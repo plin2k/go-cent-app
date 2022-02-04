@@ -16,7 +16,7 @@ type merchantBalanceResponse struct {
 
 // You can request information about your current balance state using this API.
 // https://cent.app/en/merchant/api#merchant-balance
-func (api *api) MerchantBalance() (merchantBalanceResponse, error) {
+func (api *Api) MerchantBalance() (merchantBalanceResponse, error) {
 	var response merchantBalanceResponse
 
 	jsonString, err := api.request("GET", merchantBalanceURL, url.Values{})

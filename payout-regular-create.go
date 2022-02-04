@@ -28,7 +28,7 @@ type payoutRegularCreateResponse struct {
 //Payout to cards using your account balance.
 //You request can be split if amount is too large. In this case you will see a list of payouts.
 // https://cent.app/en/merchant/api#regular-payout-create
-func (api *api) PayoutRegularCreate(req *PayoutRegularCreateRequest) (payoutRegularCreateResponse, error) {
+func (api *Api) PayoutRegularCreate(req *PayoutRegularCreateRequest) (payoutRegularCreateResponse, error) {
 	var response payoutRegularCreateResponse
 
 	jsonString, err := api.request("POST", payoutRegularCreateURL, req.constructURL())

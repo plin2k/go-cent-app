@@ -33,7 +33,7 @@ type billCreateResponse struct {
 
 // Create a bill.
 // https://cent.app/en/merchant/api#bill-create
-func (api *api) BillCreate(req *BillCreateRequest) (billCreateResponse, error) {
+func (api *Api) BillCreate(req *BillCreateRequest) (billCreateResponse, error) {
 	var response billCreateResponse
 
 	jsonString, err := api.request("POST", billCreateURL, req.constructURL())

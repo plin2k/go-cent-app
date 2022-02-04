@@ -23,7 +23,7 @@ type billToggleActivityResponse struct {
 
 // You can deactivate and activate bills using this APO.
 // https://cent.app/en/merchant/api#bill-toggle
-func (api *api) BillToggleActivity(req *BillToggleActivityRequest) (billToggleActivityResponse, error) {
+func (api *Api) BillToggleActivity(req *BillToggleActivityRequest) (billToggleActivityResponse, error) {
 	var response billToggleActivityResponse
 
 	jsonString, err := api.request("POST", billToggleActivityURL, req.constructURL())

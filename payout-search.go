@@ -23,7 +23,7 @@ type payoutSearchResponse struct {
 
 // You can request all your payouts using this method.
 // https://cent.app/en/merchant/api#payout-search
-func (api *api) PayoutSearch(req *PayoutSearchRequest) (payoutSearchResponse, error) {
+func (api *Api) PayoutSearch(req *PayoutSearchRequest) (payoutSearchResponse, error) {
 	var response payoutSearchResponse
 
 	jsonString, err := api.request("GET", payoutSearchURL, req.constructURL())

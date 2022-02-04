@@ -21,7 +21,7 @@ type paymentStatusResponse struct {
 
 // Get status of payment.
 // https://cent.app/en/merchant/api#payment-status
-func (api *api) PaymentStatus(req *PaymentStatusRequest) (paymentStatusResponse, error) {
+func (api *Api) PaymentStatus(req *PaymentStatusRequest) (paymentStatusResponse, error) {
 	var response paymentStatusResponse
 
 	jsonString, err := api.request("GET", paymentStatusURL, req.constructURL())

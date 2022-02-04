@@ -20,7 +20,7 @@ type payoutStatusResponse struct {
 
 // You can request a status of any payout operation.
 // https://cent.app/en/merchant/api#payout-status
-func (api *api) PayoutStatus(req *PayoutStatusRequest) (payoutStatusResponse, error) {
+func (api *Api) PayoutStatus(req *PayoutStatusRequest) (payoutStatusResponse, error) {
 	var response payoutStatusResponse
 
 	jsonString, err := api.request("GET", payoutStatusURL, req.constructURL())

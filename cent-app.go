@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-type api struct {
+type Api struct {
 	token       string
 	bearerToken string
 }
@@ -72,7 +72,7 @@ type Time struct {
 	time.Time
 }
 
-func New(token string) *api {
+func New(token string) *Api {
 
 	errors[400] = map[string]string{
 		"api:error.too_many_payments":             "You are trying to get too many payments in one request",
@@ -114,13 +114,13 @@ func New(token string) *api {
 		"api:error.general_error": "Internal error",
 	}
 
-	return &api{
+	return &Api{
 		token:       token,
 		bearerToken: "Bearer " + token,
 	}
 }
 
-func (api *api) request(method, url string, params url.Values) (string, error) {
+func (api *Api) request(method, url string, params url.Values) (string, error) {
 
 	tr := &http.Transport{
 		MaxIdleConns:       10,

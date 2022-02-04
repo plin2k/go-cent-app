@@ -24,7 +24,7 @@ type paymentSearchResponse struct {
 
 // Search payment.
 // https://cent.app/en/merchant/api#payment-search
-func (api *api) PaymentSearch(req *PaymentSearchRequest) (paymentSearchResponse, error) {
+func (api *Api) PaymentSearch(req *PaymentSearchRequest) (paymentSearchResponse, error) {
 	var response paymentSearchResponse
 
 	jsonString, err := api.request("GET", paymentSearchURL, req.constructURL())

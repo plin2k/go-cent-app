@@ -23,7 +23,7 @@ type payoutPersonalCreateResponse struct {
 
 // In order to withdraw money you need to create a payout. The amount of payout can be split depending on payout account type. In this case you will get a list with payouts.
 // https://cent.app/en/merchant/api#personal-payout-create
-func (api *api) PayoutPersonalCreate(req *PayoutPersonalCreateRequest) (payoutPersonalCreateResponse, error) {
+func (api *Api) PayoutPersonalCreate(req *PayoutPersonalCreateRequest) (payoutPersonalCreateResponse, error) {
 	var response payoutPersonalCreateResponse
 
 	jsonString, err := api.request("POST", payoutPersonalCreateURL, req.constructURL())

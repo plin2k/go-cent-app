@@ -24,7 +24,7 @@ type billSearchResponse struct {
 
 // Search by bills.
 // https://cent.app/en/merchant/api#bill-search
-func (api *api) BillSearch(req *BillSearchRequest) (billSearchResponse, error) {
+func (api *Api) BillSearch(req *BillSearchRequest) (billSearchResponse, error) {
 	var response billSearchResponse
 
 	jsonString, err := api.request("GET", billSearchURL, req.constructURL())

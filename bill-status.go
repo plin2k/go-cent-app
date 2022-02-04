@@ -21,7 +21,7 @@ type billStatusResponse struct {
 
 // Get bill info and status.
 // https://cent.app/en/merchant/api#bill-status
-func (api *api) BillStatus(req *BillStatusRequest) (billStatusResponse, error) {
+func (api *Api) BillStatus(req *BillStatusRequest) (billStatusResponse, error) {
 	var response billStatusResponse
 
 	jsonString, err := api.request("GET", billStatusURL, req.constructURL())
