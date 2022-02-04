@@ -3,6 +3,12 @@
 ### Official documentation - https://cent.app/en/merchant/api
 The package is fully tested and works on API version v1
 
+## Install
+
+```go
+go get github.com/plin2k/go-cent-app
+```
+
 ## Package usage example
 For each request, a separate structure and a separate API method are created.
 ```GO
